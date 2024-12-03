@@ -1,0 +1,22 @@
+// /src/components/Modal/style.scss
+.modal{
+    display: table;
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: -50%,-50%;
+    width: 3rem;
+    margin-left: -1.5rem;
+    margin-top: -0.5rem;
+    border-radius: .08rem;
+    height: 1rem;
+    background:rgba(0,0,0,.7);
+    &-text{
+        display:table-cell;
+        padding: .2rem;
+        font-size :.16rem;
+        color: #fff;
+        vertical-align: middle;
+        text-align: center;
+    }
+}
