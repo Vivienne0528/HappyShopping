@@ -11,7 +11,7 @@ function Guide() {
     //处理页面跳转
     const nevigate = useNavigate()
     const handleIconClick = () => {
-        nevigate('/login')
+        nevigate('/account/login')
     }
 
     return (

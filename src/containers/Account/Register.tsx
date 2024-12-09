@@ -1,40 +1,51 @@
-// /src/containers/Login/index.tsx
-import './style.scss';
+// /src/containers/Register/index.tsx
 import { useRef, useState } from 'react';
 import useRequest from '../../utils/useRequest';
 import Modal, { ModalInterfaceType } from '../../components/Modal';
-import { Link } from 'react-router-dom';
 
 // 1. 首先定义接口返回内容
 type ResponseType = {
-    success: boolean;
-    data: {
-        token: string
-    }
+    success: boolean,
+    data: boolean
 }
 
-const Login = () => {
+const Register = () => {
     const modalRef = useRef<ModalInterfaceType>(null)
+    const [userName, setUserName] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
+    const [checkPassword, setCheckPassword] = useState('')
 
     const { request } =
         useRequest<ResponseType>({
-            url: '/login.json',
+            url: '/register.json',
             method: 'POST',
             params: {
+                user: userName,
                 phone: phoneNumber,
                 password: password
             }
         });
-
+    // when 注册 is clicked
     function handleSubmitBtnClick() {
+        if (!userName) {
+            modalRef.current?.showMessage('请输入用户名')
+            return
+        }
         if (!phoneNumber) {
             modalRef.current?.showMessage('请输入手机号码')
             return
         }
         if (!password) {
             modalRef.current?.showMessage('请输入密码')
+            return
+        }
+        if (!checkPassword) {
+            modalRef.current?.showMessage('请输入确认密码')
+            return
+        }
+        if (checkPassword !== password) {
+            modalRef.current?.showMessage('两次密码输入不一致')
             return
         }
 
@@ -47,12 +58,17 @@ const Login = () => {
     }
 
     return (
-        <div className="page login-page">
-            <div className="tab">
-                <div className='tab-item tab-item-left'>登陆</div>
-                <div className='tab-item tab-item-right'><Link to='/register'>注册 </Link></div>
-            </div>
+        <>
             <div className="form">
+                <div className='form-item'>
+                    <div className='form-item-title'>用户名</div>
+                    <input
+                        value={userName}
+                        className='form-item-content'
+                        placeholder='请输入用户名'
+                        onChange={(e) => { setUserName(e.target.value) }}
+                    />
+                </div>
                 <div className='form-item'>
                     <div className='form-item-title'>手机号</div>
                     <input
@@ -72,17 +88,25 @@ const Login = () => {
                         onChange={(e) => { setPassword(e.target.value) }}
                     />
                 </div>
+                <div className='form-item'>
+                    <div className='form-item-title'>确认密码</div>
+                    <input
+                        value={checkPassword}
+                        type="password"
+                        className='form-item-content'
+                        placeholder='请再次输入密码'
+                        onChange={(e) => { setCheckPassword(e.target.value) }}
+                    />
+                </div>
             </div>
             <div className="submit" onClick={handleSubmitBtnClick}>
-                登陆
+                注册
             </div>
-            <p className="notice">
-                *登录即表示您赞同使用条款及隐私政策
-            </p>
+
             <Modal ref={modalRef} />
 
-        </div>
+        </>
     )
 }
 
-export default Login;
+export default Register;

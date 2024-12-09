@@ -1,4 +1,4 @@
-.login-page {
+.account-page {
   .tab {
     width: 1.14rem;
     line-height: .21rem;
@@ -9,15 +9,18 @@
   .tab-item {
     display: inline-block;
     font-weight: bold;
-    &-left {
-      color: #73D13D;
+    &-active {
+      a{
+         color: #73D13D !important;
+      }
     }
     &-right {
       float: right;
-      a {
+    } 
+    a {
       color: #242424;
       text-decoration: none;}
-    }
+    
   }
   .form {
     margin-bottom: .6rem;
@@ -44,9 +47,9 @@
   .submit {
     margin: 0 .3rem .94rem .3rem;
     line-height: .5rem;
-    border-radius: 25px;
+    border-radius: .25rem;
     background: #73D13D;
-    box-shadow: 0px 6px 6px 0px #D9F7BE;
+    box-shadow: 0rem .06rem .06rem 0rem #D9F7BE;
     font-size: .16rem;
     color: #FFF;
     text-align: center;
@@ -55,7 +58,7 @@
     color: #CF1322;
     font-size: .16rem;
     line-height: .24rem;
-    letter-spacing: 0px;
+    letter-spacing: 0rem;
     text-align: center;
   }
 }
