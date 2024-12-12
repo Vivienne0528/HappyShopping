@@ -1,0 +1,56 @@
+.home-page{ 
+  .banner{
+    height: 2.3rem;
+    background-color:#73D13D;
+    .location{
+      line-height: .24rem;
+      padding: .14rem .14rem .12rem .14rem;
+      color: #FFF;
+      font-size: .14rem;
+      line-height: .22rem;
+      font-weight: normal;
+      .iconfont{
+        margin-right: .1rem;
+      }
+    }
+    .search{
+      margin: 0 auto .2rem auto;
+      width: 3.4rem;
+      height: .36rem;
+      line-height: .36rem;
+      background: #FFF;
+      color:#808080;
+      font-size: .14rem;
+      border-radius: .18rem;
+      .iconfont{
+        margin-left: .12rem;
+        margin-right: .08rem;
+      }
+    }
+    .swiper-area{
+      position: relative;
+      .swiper-item{
+        margin-left: .18rem;
+        &-img{
+          width: 3.4rem;
+          height: .9rem;
+       } 
+      }
+      .pagination{
+        z-index: 999;
+        position: absolute;
+        left: 50%;
+        bottom: .26rem;
+        transform: translateX(-50%);
+        color: #fff;
+        font-size: .12rem;
+        line-height: .2remx;
+        text-align: center;
+        background: #52C41A;
+        border-radius: .1rem;
+        padding: 0 .1rem;
+      }
+    }
+    
+  }
+}

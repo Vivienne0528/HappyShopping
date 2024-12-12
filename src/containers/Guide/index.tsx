@@ -9,9 +9,13 @@ function Guide() {
         ref.current.style.opacity = '1'
     }, [])
     //处理页面跳转
-    const nevigate = useNavigate()
+    const navigate = useNavigate()
     const handleIconClick = () => {
-        nevigate('/account/login')
+        if (localStorage.getItem('token')) {
+            navigate('/home')
+        } else {
+            navigate('/account/login')
+        }
     }
 
     return (
