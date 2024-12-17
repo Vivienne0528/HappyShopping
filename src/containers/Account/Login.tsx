@@ -1,46 +1,36 @@
 // /src/containers/Login/index.tsx
-import { useRef, useState } from 'react';
-import useRequest from '../../utils/useRequest';
-import Modal, { ModalInterfaceType } from '../../components/Modal';
+import { useState } from 'react';
+import useRequest from '../hooks/useRequest';
 import { useNavigate } from 'react-router-dom';
-
-
-// 1. 首先定义接口返回内容
-type ResponseType = {
-    success: boolean;
-    data: {
-        token: string
-    }
-}
+import { message } from '../../utils/message';
+import type { LoginResponseType } from './types';
 
 const Login = () => {
-    const modalRef = useRef<ModalInterfaceType>(null)
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
 
-    const { request } =
-        useRequest<ResponseType>({
-            url: '/login.json',
-            method: 'POST',
-            params: {
-                phone: phoneNumber,
-                password: password
-            }
-        });
+    const { request } = useRequest<LoginResponseType>({ manual: true });
 
     const navigate = useNavigate()
 
     function handleSubmitBtnClick() {
         if (!phoneNumber) {
-            modalRef.current?.showMessage('请输入手机号码')
+            message('请输入手机号码')
             return
         }
         if (!password) {
-            modalRef.current?.showMessage('请输入密码')
+            message('请输入密码')
             return
         }
 
-        request().then((data) => {
+        request({
+            url: '/login.json',
+            method: 'POST',
+            data: {
+                phone: phoneNumber,
+                password: password,
+            }
+        }).then((data) => {
             const { data: { token } } = data
             if (token) {
                 localStorage.setItem('token', token) // 将 token 存储在浏览器的 localStorage 中(持久化存储)
@@ -49,7 +39,7 @@ const Login = () => {
 
         }).catch((e: any) => {
             //用户发请求失败
-            modalRef.current?.showMessage(e?.message || '未知异常')
+            message(e?.message || '未知异常')
         });
     }
 
@@ -82,8 +72,6 @@ const Login = () => {
             <p className="notice">
                 *登录即表示您赞同使用条款及隐私政策
             </p>
-            <Modal ref={modalRef} />
-
         </>
     )
 }

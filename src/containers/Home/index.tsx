@@ -4,10 +4,11 @@ import './style.scss'
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Swiper as SwiperType } from 'swiper'
-import useRequest from '../../utils/useRequest';
-import Modal, { ModalInterfaceType } from '../../components/Modal';
+import useRequest from '../hooks/useRequest';
+import { message } from '../../utils/message';
+import type { ResponseType } from './types';
 
 const localLocation = localStorage.getItem('location')
 const locationHistory = localLocation ? JSON.parse(localLocation) : null
@@ -26,19 +27,8 @@ const defaultRequestData = {
 const Home = () => {
     //请求接口的对象
     const [requestData, setRequestData] = useState(defaultRequestData)
-    const { request } = useRequest(requestData)
-    const modalRef = useRef<ModalInterfaceType>(null)
-
-
-    //useRequest依赖于requestData
-    useEffect(() => {
-        //上面写request了,这里可以直接.then(),request成功打印data,失败打印错误信息
-        request().then((data) => {
-            console.log(data)
-        }).catch(e => {
-            console.log(e?.message)
-        })
-    }, [requestData, request])
+    //请求发送的结果
+    const { data } = useRequest<ResponseType>(requestData)
 
     useEffect(() => {
         //从前端取经纬度,可调用getCurrentPosition方法(三个参数,一个成功的回调函数,一个失败的回调函数,一个配置参数:多久ms获取不到经纬度就不获取了,)
@@ -59,7 +49,7 @@ const Home = () => {
                 console.log(latitude, longitude)
             }, (error) => {
                 //用户发请求失败
-                modalRef.current?.showMessage(error?.message || '未知异常')
+                message(error?.message || '未知异常')
             }, { timeout: 10000 })
         }
         //自己加的
@@ -75,7 +65,7 @@ const Home = () => {
             <div className='banner'>
                 <h3 className='location'>
                     <span className='iconfont'>&#xe617;</span>
-                    优果购(昌平店)
+                    {data?.data.location.address || ' '}
                 </h3>
                 <div className='search'>
                     <span className='iconfont'>&#xe6a8;</span>
@@ -87,21 +77,21 @@ const Home = () => {
                         slidesPerView={1}
                         onSlideChange={(e: SwiperType) => setPage(e.activeIndex + 1)}
                     >
-                        <SwiperSlide>
-                            <div className='swiper-item'>
-                                <img className='swiper-item-img' src='http://statics.dell-lee.com/shopping/banner.png' alt='轮播图' />
-                            </div>
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <div className='swiper-item'>
-                                <img className='swiper-item-img' src='http://statics.dell-lee.com/shopping/banner.png' alt='轮播图' />
-                            </div>
-                        </SwiperSlide>
+                        {
+                            (data?.data.banners || []).map(item => {
+                                return (
+                                    <SwiperSlide key={item.id}>
+                                        <div className='swiper-item'>
+                                            <img className='swiper-item-img' src={item.url} alt='轮播图' />
+                                        </div>
+                                    </SwiperSlide>
+                                )
+                            })
+                        }
                     </Swiper>
-                    <div className='pagination'>{page}/2</div>
+                    <div className='pagination'>{page}/{data?.data.banners.length || 0}</div>
                 </div>
             </div>
-            <Modal ref={modalRef} />
         </div>
     )
 }
