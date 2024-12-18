@@ -3,28 +3,33 @@ import './style.scss'
 // Import Swiper styles
 import 'swiper/css';
 import { useEffect, useState } from 'react';
-import useRequest from '../hooks/useRequest';
+import useRequest from '../../hooks/useRequest';
 import { message } from '../../utils/message';
 import type { ResponseType } from './types';
 import Banner from './components/Banner';
 import Category from './components/Category';
 import Card from './components/Card';
 
-const localLocation = localStorage.getItem('location')
-const locationHistory = localLocation ? JSON.parse(localLocation) : null
-
-//默认请求数据
+// 默认请求数据
 const defaultRequestData = {
     url: '/home.json',
     method: 'POST',
     //有localHistory就用localHistory,没有就用默认值
     data: {
-        latitude: locationHistory ? locationHistory.latitude : 37.7304167,
-        longitude: locationHistory ? locationHistory.longitude : -122.384425,
+        latitude: 37.7304167,
+        longitude: -122.384425,
     }
 }
 
 const Home = () => {
+    const localLocation = localStorage.getItem('location')
+    const locationHistory = localLocation ? JSON.parse(localLocation) : null
+
+    if (locationHistory) {
+        defaultRequestData.data.latitude = locationHistory.latitude;
+        defaultRequestData.data.longitude = locationHistory.longitude;
+    }
+
     //请求接口的对象
     const [requestData, setRequestData] = useState(defaultRequestData)
     //请求发送的结果
@@ -56,7 +61,7 @@ const Home = () => {
         if (locationHistory) {
             console.log('already have location')
         }
-    }, [])
+    }, [locationHistory])
     let location, banners, categories, freshes = undefined;
     const dataResult = data?.data;
     if (dataResult) {

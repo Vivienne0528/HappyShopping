@@ -1,6 +1,6 @@
 // /src/containers/Register/index.tsx
 import { useState } from 'react';
-import useRequest from '../hooks/useRequest';
+import useRequest from '../../hooks/useRequest';
 import { message } from '../../utils/message';
 import { useNavigate } from 'react-router-dom';
 import type { RegisterResponseType } from './types';

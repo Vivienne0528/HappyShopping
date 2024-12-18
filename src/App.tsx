@@ -8,6 +8,7 @@ import Register from './containers/Account/Register'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import Account from './containers/Account'
 import Home from './containers/Home'
+import Nearby from './containers/Nearby'
 
 const router = createHashRouter([{
   path: '/',
@@ -25,6 +26,9 @@ const router = createHashRouter([{
 }, {
   path: '/home',
   element: <Home />
+}, {
+  path: '/nearby',
+  element: <Nearby />
 }
 ])
 
