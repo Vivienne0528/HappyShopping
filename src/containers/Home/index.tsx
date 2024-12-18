@@ -1,14 +1,14 @@
 // src/containers/Home/index.tsx
 import './style.scss'
-// Import Swiper React components
-import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
 import { useEffect, useState } from 'react';
-import { Swiper as SwiperType } from 'swiper'
 import useRequest from '../hooks/useRequest';
 import { message } from '../../utils/message';
 import type { ResponseType } from './types';
+import Banner from './components/Banner';
+import Category from './components/Category';
+import Card from './components/Card';
 
 const localLocation = localStorage.getItem('location')
 const locationHistory = localLocation ? JSON.parse(localLocation) : null
@@ -57,39 +57,42 @@ const Home = () => {
             console.log('already have location')
         }
     }, [])
+    let location, banners, categories, freshes = undefined;
+    const dataResult = data?.data;
+    if (dataResult) {
+        location = dataResult.location;
+        banners = dataResult.banners;
+        categories = dataResult.categories;
+        freshes = dataResult.freshes;
+    }
 
-    //页码下标
-    const [page, setPage] = useState(1)
     return (
         <div className='page home-page'>
-            <div className='banner'>
-                <h3 className='location'>
-                    <span className='iconfont'>&#xe617;</span>
-                    {data?.data.location.address || ' '}
-                </h3>
-                <div className='search'>
-                    <span className='iconfont'>&#xe6a8;</span>
-                    请输入你需要搜索的内容
+
+            <Banner location={location} banners={banners} />
+            <Category categories={categories} />
+            <Card title='新品尝鲜' list={freshes} />
+            {/* 组件复用很方便 */}
+            <Card title='限时抢购' list={freshes} />
+            <div className='bottom'>
+                - 我是有底线的 -
+            </div>
+            <div className='docker'>
+                <div className='docker-item docker-item-active'>
+                    <p className='iconfont docker-item-icon'>&#xe6fe;</p>
+                    <p className='docker-item-title'>首页</p>
                 </div>
-                <div className='swiper-area'>
-                    <Swiper
-                        spaceBetween={0}
-                        slidesPerView={1}
-                        onSlideChange={(e: SwiperType) => setPage(e.activeIndex + 1)}
-                    >
-                        {
-                            (data?.data.banners || []).map(item => {
-                                return (
-                                    <SwiperSlide key={item.id}>
-                                        <div className='swiper-item'>
-                                            <img className='swiper-item-img' src={item.url} alt='轮播图' />
-                                        </div>
-                                    </SwiperSlide>
-                                )
-                            })
-                        }
-                    </Swiper>
-                    <div className='pagination'>{page}/{data?.data.banners.length || 0}</div>
+                <div className='docker-item'>
+                    <p className='iconfont docker-item-icon'>&#xe60c;</p>
+                    <p className='docker-item-title'>分类</p>
+                </div>
+                <div className='docker-item'>
+                    <p className='iconfont docker-item-icon'>&#xe6af;</p>
+                    <p className='docker-item-title'>购物车</p>
+                </div>
+                <div className='docker-item'>
+                    <p className='iconfont docker-item-icon'>&#xe660;</p>
+                    <p className='docker-item-title'>我的</p>
                 </div>
             </div>
         </div>
@@ -97,4 +100,3 @@ const Home = () => {
 }
 
 export default Home;
-
