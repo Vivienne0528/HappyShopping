@@ -1,19 +1,25 @@
 import type { ResponseType } from './types';
 import './style.scss';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import useRequest from '../../hooks/useRequest';
 
 // 默认请求数据
 const defaultRequestData = {
   url: '/hostSeachList.json',
-  method: 'GET'
+  method: 'GET',
+  params: { shopId: '' }
 }
 
 const Search = () => {
   const localSearchList = localStorage.getItem('search-list');
   const seachListHistory: string[] = localSearchList ? JSON.parse(localSearchList) : [];
+  const navigate = useNavigate();
 
+  const params = useParams<{ shopId: string }>();
+  if (params.shopId) {
+    defaultRequestData.params.shopId = params.shopId;
+  }
   const [historyList, setHistoryList] = useState(seachListHistory);
   const [keyword, setKeyword] = useState('');
 
@@ -21,21 +27,30 @@ const Search = () => {
   const hotList = data?.data || [];
 
   function handleKeyDown(key: string) {
-    if (key === 'Enter') {
+    if (key === 'Enter' && keyword) {
+      const keywordIndex = historyList.findIndex(item => item === keyword);
       const newHistoryList = [...historyList];
+      if (keywordIndex > -1) {
+        newHistoryList.splice(keywordIndex, 1)
+      }
       newHistoryList.unshift(keyword);
       if (newHistoryList.length > 20) {
         newHistoryList.length = 20;
       }
       setHistoryList(newHistoryList);
+      localStorage.setItem('search-list', JSON.stringify(newHistoryList));
+      navigate(`/searchList/${params.shopId}/${keyword}`);
       setKeyword('');
-      localStorage.setItem('search-list', JSON.stringify(newHistoryList))
     }
   }
 
   function handleHistoryListClean() {
     setHistoryList([]);
     localStorage.setItem('search-list', JSON.stringify([]))
+  }
+
+  function handleKeywordClick(keyword: string) {
+    navigate(`/searchList/${params.shopId}/${keyword}`);
   }
 
   return (
@@ -69,7 +84,7 @@ const Search = () => {
             <ul className='list'>
               {
                 historyList.map((item, index) => {
-                  return <li className='list-item' key={item + index}>{item}</li>
+                  return <li className='list-item' key={item + index} onClick={() => handleKeywordClick(item)}>{item}</li>
                 })
               }
             </ul>
@@ -85,7 +100,7 @@ const Search = () => {
             <ul className='list'>
               {
                 hotList.map(item => (
-                  <li className='list-item' key={item.id}>{item.keyword}</li>
+                  <li className='list-item' key={item.id} onClick={() => handleKeywordClick(item.keyword)}>{item.keyword} </li>
                 ))
               }
             </ul>

@@ -18,7 +18,10 @@ const Banner = (props: BannerPropsType) => {
         navigate('/nearby')
     }
     function handleSearchClick() {
-        navigate('/search')
+        if (location) {
+            navigate(`/search/${location.id}`)
+        }
+        //navigate(`/search/${location?.id}`)
     }
 
     return (
