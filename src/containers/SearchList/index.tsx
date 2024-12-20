@@ -90,17 +90,19 @@ const SearchList = () => {
         {
           list.map(item => {
             return (
-              <div className='item' key={item.id}>
-                <img alt={item.title} className='item-img' src={item.imgUrl} />
-                <div className='item-content'>
-                  <p className='item-title'>{item.title}</p>
-                  <div className='item-price'>
-                    <span className='item-price-yen'>&yen;</span>
-                    {item.price}
+              <Link to={`/detail/${item.id}`} key={item.id}>
+                <div className='item'>
+                  <img alt={item.title} className='item-img' src={item.imgUrl} />
+                  <div className='item-content'>
+                    <p className='item-title'>{item.title}</p>
+                    <div className='item-price'>
+                      <span className='item-price-yen'>&yen;</span>
+                      {item.price}
+                    </div>
+                    <div className='item-sales'>已售{item.sales}</div>
                   </div>
-                  <div className='item-sales'>已售{item.sales}</div>
                 </div>
-              </div>
+              </Link>
             );
           })
         }

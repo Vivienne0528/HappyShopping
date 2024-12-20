@@ -9,6 +9,7 @@ import type { ResponseType } from './types';
 import Banner from './components/Banner';
 import Category from './components/Category';
 import Card from './components/Card';
+import Docker from '../../components/Docker';
 
 // 默认请求数据
 const defaultRequestData = {
@@ -73,7 +74,6 @@ const Home = () => {
 
     return (
         <div className='page home-page'>
-
             <Banner location={location} banners={banners} />
             <Category categories={categories} />
             <Card title='新品尝鲜' list={freshes} />
@@ -82,24 +82,7 @@ const Home = () => {
             <div className='bottom'>
                 - 我是有底线的 -
             </div>
-            <div className='docker'>
-                <div className='docker-item docker-item-active'>
-                    <p className='iconfont docker-item-icon'>&#xe6fe;</p>
-                    <p className='docker-item-title'>首页</p>
-                </div>
-                <div className='docker-item'>
-                    <p className='iconfont docker-item-icon'>&#xe60c;</p>
-                    <p className='docker-item-title'>分类</p>
-                </div>
-                <div className='docker-item'>
-                    <p className='iconfont docker-item-icon'>&#xe6af;</p>
-                    <p className='docker-item-title'>购物车</p>
-                </div>
-                <div className='docker-item'>
-                    <p className='iconfont docker-item-icon'>&#xe660;</p>
-                    <p className='docker-item-title'>我的</p>
-                </div>
-            </div>
+            <Docker activeName='home' />
         </div>
     )
 }

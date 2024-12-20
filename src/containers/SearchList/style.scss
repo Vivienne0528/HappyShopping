@@ -1,7 +1,10 @@
 .search-list-page {
   font-size: .14rem;
   background: #F5F9FA;
-  ;
+  overflow-y: scroll;
+  a {
+    text-decoration: none;
+  }
   .search {
     display: flex;
     padding: .08rem .32rem .06rem 0;

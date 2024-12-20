@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { CardListType } from '../types';
 
 type CardPropsType = {
@@ -7,6 +8,13 @@ type CardPropsType = {
 
 const Card = (props: CardPropsType) => {
     const { title, list } = props;
+
+    const navigate = useNavigate();
+
+    function handleItemClick(productId: string) {
+        navigate(`/detail/${productId}`);
+    }
+
     return (
         <div className='card'>
             <h3 className='card-title'>
@@ -22,7 +30,7 @@ const Card = (props: CardPropsType) => {
                 {
                     (list || []).map((item) => {
                         return (
-                            <div className='card-content-item' key={item.id}>
+                            <div className='card-content-item' key={item.id} onClick={() => handleItemClick(item.id)}>
                                 <img
                                     alt={item.name}
                                     className='card-content-item-img'
