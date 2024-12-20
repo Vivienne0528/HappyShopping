@@ -102,7 +102,8 @@ function Cart() {
       })
     })
     if (params.length === 0) {
-      message('您没有勾选任何购物车中的商品，无法创建订单')
+      message('您没有勾选任何购物车中的商品，无法创建订单');
+      return;
     }
     submitRequest({
       url: '/cartSubmit.json',
@@ -137,7 +138,7 @@ function Cart() {
                         }}
                       >
                         <div className={product.selected ? 'radio radio-active' : 'radio'}></div>
-                        <img src={product.imgUrl} className='shop-product-img' />
+                        <img src={product.imgUrl} alt={product.title} className='shop-product-img' />
                         <div className='shop-product-content'>
                           <div className='shop-product-title'>
                             {product.title}

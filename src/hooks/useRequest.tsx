@@ -35,6 +35,7 @@ function useRequest<T>(options: AxiosRequestConfig & { manual?: boolean } = defa
         } : {}
         // 发送请求
         return axios.request<T>({
+            //baseURL: 'http://statics.dell-lee.com/shopping-project/mock/',
             url: requestOptions.url,
             method: requestOptions.method,
             signal: controllerRef.current.signal,

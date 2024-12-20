@@ -14,6 +14,7 @@ import SearchList from './containers/SearchList'
 import Detail from './containers/Detail'
 import Category from './containers/Category'
 import Cart from './containers/Cart'
+import Order from './containers/Order'
 
 const router = createHashRouter([{
   path: '/',
@@ -49,6 +50,13 @@ const router = createHashRouter([{
 }, {
   path: '/cart',
   element: <Cart />
+}, {
+  path: '/order/:id',
+  element: <Order />
+}, {
+  //如果没有路径能匹配就展示Home Page
+  path: '*',
+  element: <Home />
 }
 ])
 
