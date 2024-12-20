@@ -13,3 +13,11 @@ export type ResponseType = {
     detail: string;
   };
 };
+
+// 购物车返回内容类型
+export type CartResponseType = {
+  success: boolean;
+  data: {
+    count: number;
+  };
+};

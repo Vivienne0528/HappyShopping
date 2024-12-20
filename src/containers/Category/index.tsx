@@ -1,9 +1,11 @@
 import './style.scss';
-import { ProductType, CategoryAndTagResponseType, ProductResponseType } from './types';
+import { CartType, ProductType, CartResponseType, CategoryAndTagResponseType, ProductResponseType } from './types';
 import { useEffect, useState } from 'react';
 import { message } from '../../utils/message';
 import useRequest from '../../hooks/useRequest';
 import Docker from '../../components/Docker';
+import Popover from '../../components/Popover';
+import { CartChangeResponseType } from '../../types';
 import { useNavigate } from 'react-router-dom';
 
 const Category = () => {
@@ -16,11 +18,21 @@ const Category = () => {
   const [keyword, setKeyword] = useState('');
   const [currentTag, setCurrentTag] = useState('');
   const [currentCategory, setCurrentCategory] = useState('');
-
+  // 购物车相关逻辑
+  const [showCart, setShowCart] = useState(false);
+  const [cartProductInfo, setCartProductInfo] = useState<CartType>({
+    id: '', title: '', imgUrl: '', price: '', count: 0
+  })
   // 根据页面要求，动态发送请求
   const { request: tagRequest } = useRequest<CategoryAndTagResponseType>({ manual: true });
 
   const { request: productRequest } = useRequest<ProductResponseType>({ manual: true });
+
+  // 获取购物车内容信息
+  const { request: cartRequest } = useRequest<CartResponseType>({ manual: true });
+
+  // 更新购物车内容
+  const { request: cartChangeRequest } = useRequest<CartChangeResponseType>({ manual: true });
 
   useEffect(() => {
     productRequest({
@@ -63,8 +75,45 @@ const Category = () => {
     }
   }
 
-  function handleProductClick(productId: string) {
-    navigate(`/detail/${productId}`);
+  function handleProductClick(e: React.MouseEvent<HTMLDivElement, MouseEvent>, productId: string) {
+    e.stopPropagation();
+    cartRequest({
+      url: '/cartProductInfo.json',
+      method: 'GET',
+      params: { productId }
+    }).then((data) => {
+      setCartProductInfo(data.data);
+      setShowCart(true);
+    }).catch(e => {
+      message(e.message);
+    })
+  }
+
+  function handleCartNumberChange(type: 'minus' | 'add') {
+    const newCartProductInfo = { ...cartProductInfo };
+    const { count } = newCartProductInfo;
+    if (type === 'minus') {
+      newCartProductInfo.count = (count - 1) < 0 ? 0 : (count - 1);
+    } else {
+      newCartProductInfo.count = count + 1;
+    }
+    setCartProductInfo(newCartProductInfo);
+  }
+
+  function closeMask() {
+    setShowCart(false);
+  }
+
+  function changeCartInfo() {
+    cartChangeRequest({
+      url: '/cartChange.json',
+      method: 'GET',
+      params: { id: cartProductInfo.id, count: cartProductInfo.count }
+    }).then(() => {
+      setShowCart(false);
+    }).catch((e) => {
+      message(e.message);
+    })
   }
 
   return (
@@ -119,9 +168,8 @@ const Category = () => {
           products.map(product => {
             return (
               <div className='product-item' key={product.id} onClick={() => {
-                handleProductClick(product.id)
-              }
-              }>
+                navigate(`/detail/${product.id}`)
+              }}>
                 <img className='product-item-img' src={product.imgUrl} alt={product.title} />
                 <div className='product-item-content'>
                   <div className='product-item-title'>
@@ -133,7 +181,10 @@ const Category = () => {
                   <div className='product-item-price'>
                     <span className='product-item-price-yen'>&yen;</span>{product.price}
                   </div>
-                  <div className='product-item-button'>
+                  <div
+                    className='product-item-button'
+                    onClick={(e) => { handleProductClick(e, product.id) }}
+                  >
                     购买
                   </div>
                 </div>
@@ -143,6 +194,34 @@ const Category = () => {
         }
       </div>
       <Docker activeName='category' />
+      <Popover show={showCart} blankClickCallback={closeMask}>
+        <div className='cart'>
+          <div className='cart-content'>
+            <img src={cartProductInfo.imgUrl} alt={cartProductInfo.title} className='cart-content-img' />
+            <div className='cart-content-info'>
+              <div className='cart-content-title'>{cartProductInfo.title}</div>
+              <div className='cart-content-price'>
+                <span className='cart-content-price-yen'>&yen;</span>
+                {cartProductInfo.price}
+              </div>
+            </div>
+          </div>
+          <div className='cart-count'>
+            <div className='cart-count-content'>
+              购买数量
+              <div className='cart-count-counter'>
+                <div className='cart-count-button' onClick={() => handleCartNumberChange('minus')}>-</div>
+                <div className='cart-count-text'>{cartProductInfo.count}</div>
+                <div className='cart-count-button' onClick={() => { handleCartNumberChange('add') }}>+</div>
+              </div>
+            </div>
+          </div>
+          <div className='cart-buttons'>
+            <div className='cart-button cart-button-left' onClick={changeCartInfo}>加入购物车</div>
+            <div className='cart-button cart-button-right'>立即购买</div>
+          </div>
+        </div>
+      </Popover>
     </div>
   )
 }
