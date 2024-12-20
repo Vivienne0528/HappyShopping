@@ -86,7 +86,7 @@ function Order() {
     <div className='page order-page'>
       <div className='title'>确认订单</div>
       <div className='receiver' onClick={handleReceiverClick}>
-        <div className='iconfont'>&#xe650;</div>
+        <div className='iconfont'>&#xe617;</div>
         <div className='receiver-content'>
           <div className='receiver-name'>
             收货人:  {data.address.name}

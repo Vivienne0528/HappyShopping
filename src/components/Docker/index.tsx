@@ -9,7 +9,7 @@ const items = [{
 }, {
   name: 'category',
   url: '/category',
-  icon: '&#xe60c;;',
+  icon: '&#xe60c;',
   text: '分类'
 }, {
   name: 'cart',
