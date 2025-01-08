@@ -146,5 +146,8 @@
   },
   "devDependencies": {
     "node-sass": "^7.0.3"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
