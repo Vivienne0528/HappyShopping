@@ -4,11 +4,13 @@ import './style.scss';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 const Account = () => {
+    //获取当前路径，判断用户是否在 / account / login 或 / account / register。
     const location = useLocation()
     const navigate = useNavigate()
-    console.log(location)
+    //如果当前路径是 /account/login，则高亮登录选项卡。
     const isLoginActivated = location.pathname === '/account/login'
     const loginActiveClass = isLoginActivated ? 'tab-item-active' : ''
+    //    否则高亮注册选项卡。
     const registerActiveClass = !isLoginActivated ? 'tab-item-active' : ''
 
     //如果已经登陆,自动跳转到商城首页

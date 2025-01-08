@@ -13,26 +13,13 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [checkPassword, setCheckPassword] = useState('')
 
-    const nevigate = useNavigate()
+    const navigate = useNavigate()
 
     const { request } = useRequest<RegisterResponseType>({ manual: true });
     // when 注册 is clicked
     function handleSubmitBtnClick() {
-        if (!userName) {
-            message('请输入用户名')
-            return
-        }
-        if (!phoneNumber) {
-            message('请输入手机号码')
-            return
-        }
-        if (!password) {
-            message('请输入密码')
-            return
-        }
-        if (!checkPassword) {
-            message('请输入确认密码')
-            return
+        if (!userName || !phoneNumber || !password || !checkPassword) {
+            return message('请填写完整信息');
         }
         if (checkPassword !== password) {
             message('两次密码输入不一致')
@@ -48,12 +35,13 @@ const Register = () => {
                 password: password,
             }
         }).then((data) => {
+            //如果请求成功 (data.success 为 true)，页面跳转到 /account/login。
             if (data?.success) {
-                nevigate('/account/login')
+                navigate('/account/login')
             }
             //data && console.log(data);
         }).catch((e: any) => {
-            //用户发请求失败
+            //如果请求失败，捕获异常并显示错误信息。
             message(e?.message || '未知异常')
         });
     }

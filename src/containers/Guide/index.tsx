@@ -4,16 +4,21 @@ import { useNavigate } from 'react-router-dom';
 
 function Guide() {
     //手动展示动画效果
-    const ref = useRef<HTMLDivElement>(null!)
+    const ref = useRef<HTMLDivElement>(null)
     useEffect(() => {
-        ref.current.style.opacity = '1'
-    }, [])
+        if (ref.current) {
+            ref.current.style.transition = 'opacity 0.5s'; // 添加过渡效果
+            ref.current.style.opacity = '1';
+        }
+    }, []);
     //处理页面跳转
     const navigate = useNavigate()
     const handleIconClick = () => {
+        //通过 localStorage 检查是否存在 token，用于判断用户是否已经登录：
         if (localStorage.getItem('token')) {
             navigate('/home')
         } else {
+            alert('Please log in first!');
             navigate('/account/login')
         }
     }
